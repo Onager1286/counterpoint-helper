@@ -1,0 +1,95 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   InteractiveStaffDisplay.module.css
+   The centerpiece — Mounted music score aesthetic
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.container {
+  /* Container styling is handled by score-frame in App.css */
+}
+
+/* Instructions as elegant marginalia */
+.instructions {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-md);
+  background: linear-gradient(
+    90deg,
+    rgba(184, 134, 11, 0.06),
+    rgba(184, 134, 11, 0.02)
+  );
+  border-left: 3px solid var(--color-brass);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  line-height: var(--line-height-relaxed);
+}
+
+.instructions strong {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Staff Container — Aged paper effect */
+.staffContainer {
+  position: relative;
+  cursor: crosshair;
+  user-select: none;
+  min-height: 320px;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  /* Aged paper background */
+  background: linear-gradient(
+    180deg,
+    var(--color-cream) 0%,
+    var(--color-parchment-dark) 50%,
+    var(--color-cream) 100%
+  );
+
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-inset);
+  transition: box-shadow 0.2s var(--ease-elegant);
+}
+
+.staffContainer:hover {
+  box-shadow:
+    var(--shadow-inset),
+    0 0 0 2px rgba(114, 47, 55, 0.05);
+}
+
+/* VexFlow SVG overrides */
+.staffContainer svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: var(--space-2xl);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--font-size-lg);
+  font-style: italic;
+  color: var(--color-text-tertiary);
+}
+
+/* Selection hint — Instructor's note style */
+.selectionHint {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-warning-light);
+  border: 1px solid var(--color-warning-border);
+  border-left: 3px solid var(--color-warning);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-warning-dark);
+  font-style: italic;
+}

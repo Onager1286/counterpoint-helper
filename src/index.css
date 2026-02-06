@@ -1,0 +1,273 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Counterpoint Helper — Global Styles
+   Theme: Classical Music Study Chamber
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ─── Reset ─── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ─── CSS Custom Properties ─── */
+:root {
+  /* ─── Base / Background ─── */
+  --color-parchment:        #FDF8F3;
+  --color-parchment-dark:   #F5EFE6;
+  --color-cream:            #FAF6F0;
+  --color-ivory:            #FFFEF9;
+
+  /* ─── Primary Accent: Burgundy ─── */
+  --color-burgundy:         #722F37;
+  --color-burgundy-light:   #8B4A52;
+  --color-burgundy-dark:    #5A252C;
+  --color-burgundy-muted:   #A67A7D;
+
+  /* ─── Secondary Accent: Aged Gold/Brass ─── */
+  --color-brass:            #B8860B;
+  --color-brass-light:      #D4A84B;
+  --color-brass-dark:       #8B6914;
+
+  /* ─── Text Colors ─── */
+  --color-text-primary:     #3D3D3D;
+  --color-text-secondary:   #5A5347;
+  --color-text-tertiary:    #7A7267;
+  --color-text-inverse:     #FDF8F3;
+
+  /* ─── Semantic: Success ─── */
+  --color-success:          #5A7D5A;
+  --color-success-light:    #E8F0E8;
+  --color-success-dark:     #3E5A3E;
+  --color-success-border:   #7A9D7A;
+
+  /* ─── Semantic: Error ─── */
+  --color-error:            #B54834;
+  --color-error-light:      #F8EBE8;
+  --color-error-dark:       #8B3828;
+  --color-error-border:     #C96B5A;
+
+  /* ─── Semantic: Warning ─── */
+  --color-warning:          #C49A3B;
+  --color-warning-light:    #FCF5E5;
+  --color-warning-dark:     #8B6B1F;
+  --color-warning-border:   #D4B05B;
+
+  /* ─── Semantic: Info ─── */
+  --color-info:             #5B7A8A;
+  --color-info-light:       #EDF2F4;
+  --color-info-dark:        #3D5A6A;
+  --color-info-border:      #8AACBC;
+
+  /* ─── Borders & Shadows ─── */
+  --color-border:           #D8D0C4;
+  --color-border-light:     #E8E2D8;
+  --color-border-dark:      #B8AFA3;
+
+  --shadow-subtle:          0 2px 8px rgba(90, 83, 71, 0.08);
+  --shadow-card:            0 4px 16px rgba(90, 83, 71, 0.12);
+  --shadow-elevated:        0 8px 32px rgba(90, 83, 71, 0.16);
+  --shadow-inset:           inset 0 2px 4px rgba(90, 83, 71, 0.06);
+
+  /* ─── Spacing Scale ─── */
+  --space-xs:    4px;
+  --space-sm:    8px;
+  --space-md:    16px;
+  --space-lg:    24px;
+  --space-xl:    32px;
+  --space-2xl:   48px;
+  --space-3xl:   64px;
+
+  /* ─── Border Radius ─── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+
+  /* ─── Typography ─── */
+  --font-display:  'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --font-heading:  'Playfair Display', 'Palatino Linotype', Georgia, serif;
+  --font-body:     'Source Serif Pro', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --font-ui:       'Alegreya Sans', 'Segoe UI', -apple-system, sans-serif;
+  --font-mono:     'IBM Plex Mono', 'Source Code Pro', Menlo, monospace;
+
+  --font-size-xs:    0.75rem;
+  --font-size-sm:    0.875rem;
+  --font-size-base:  1rem;
+  --font-size-lg:    1.125rem;
+  --font-size-xl:    1.25rem;
+  --font-size-2xl:   1.5rem;
+  --font-size-3xl:   1.875rem;
+  --font-size-4xl:   2.25rem;
+
+  --line-height-tight:   1.25;
+  --line-height-snug:    1.375;
+  --line-height-normal:  1.5;
+  --line-height-relaxed: 1.625;
+
+  /* ─── Animation ─── */
+  --ease-elegant: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-smooth:  cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* ─── Layout ─── */
+  --max-width-content: 1200px;
+}
+
+/* ─── Base Styles ─── */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background: var(--color-parchment);
+
+  /* Subtle paper texture via gradient overlay */
+  background-image:
+    radial-gradient(ellipse at 20% 30%, rgba(184, 134, 11, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(114, 47, 55, 0.02) 0%, transparent 50%),
+    linear-gradient(180deg, var(--color-parchment) 0%, var(--color-parchment-dark) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ─── Typography ─── */
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: var(--line-height-snug);
+  color: var(--color-text-primary);
+}
+
+h5, h6 {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  line-height: var(--line-height-normal);
+  color: var(--color-text-secondary);
+}
+
+p {
+  font-family: var(--font-body);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ─── Links ─── */
+a {
+  color: var(--color-burgundy);
+  text-decoration: none;
+  transition: color 0.2s var(--ease-elegant);
+}
+
+a:hover {
+  color: var(--color-burgundy-light);
+  text-decoration: underline;
+}
+
+/* ─── Form Elements ─── */
+input, select, textarea, button {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+select,
+textarea {
+  background: var(--color-ivory);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-primary);
+  transition: border-color 0.2s var(--ease-elegant), box-shadow 0.2s var(--ease-elegant);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 3px rgba(114, 47, 55, 0.1);
+}
+
+/* ─── Buttons ─── */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  transition: all 0.2s var(--ease-elegant);
+}
+
+/* ─── Scrollbar Styling ─── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-parchment-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 5px;
+  border: 2px solid var(--color-parchment-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-dark);
+}
+
+/* ─── Selection ─── */
+::selection {
+  background: rgba(114, 47, 55, 0.2);
+  color: var(--color-text-primary);
+}
+
+/* ─── Animations ─── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

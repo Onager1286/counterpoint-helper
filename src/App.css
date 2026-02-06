@@ -1,0 +1,289 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   App.css — Main Application Layout
+   Theme: Classical Music Study Chamber
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ─── App Container ─── */
+.app-container {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-xl);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Header ─── */
+.app-header {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+  margin-bottom: var(--space-xl);
+}
+
+.header-content {
+  position: relative;
+}
+
+.app-title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-4xl);
+  font-weight: 500;
+  color: var(--color-burgundy);
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-sm);
+  text-shadow: 0 1px 2px rgba(114, 47, 55, 0.1);
+}
+
+.app-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.app-subtitle em {
+  font-style: italic;
+  color: var(--color-text-tertiary);
+}
+
+.subtitle-divider {
+  margin: 0 var(--space-sm);
+  color: var(--color-brass);
+}
+
+/* Header Flourish */
+.header-flourish {
+  height: 3px;
+  margin: var(--space-lg) auto;
+  max-width: 400px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-border-light) 15%,
+    var(--color-brass) 35%,
+    var(--color-brass-light) 50%,
+    var(--color-brass) 65%,
+    var(--color-border-light) 85%,
+    transparent 100%
+  );
+  border-radius: 2px;
+}
+
+/* ─── Main Content ─── */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ─── Sections ─── */
+.section {
+  animation: slideUp 0.4s var(--ease-elegant);
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-lg);
+  position: relative;
+  display: inline-block;
+  padding-bottom: var(--space-sm);
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--color-brass);
+}
+
+/* ─── Score Frame — The Centerpiece ─── */
+.score-frame {
+  position: relative;
+  background: var(--color-parchment-dark);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow:
+    var(--shadow-elevated),
+    inset 0 0 30px rgba(90, 83, 71, 0.04);
+}
+
+/* Decorative corner elements */
+.score-frame-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--color-brass);
+  border-style: solid;
+}
+
+.score-frame-corner-tl {
+  top: 8px;
+  left: 8px;
+  border-width: 2px 0 0 2px;
+  border-radius: 4px 0 0 0;
+}
+
+.score-frame-corner-tr {
+  top: 8px;
+  right: 8px;
+  border-width: 2px 2px 0 0;
+  border-radius: 0 4px 0 0;
+}
+
+.score-frame-corner-bl {
+  bottom: 8px;
+  left: 8px;
+  border-width: 0 0 2px 2px;
+  border-radius: 0 0 0 4px;
+}
+
+.score-frame-corner-br {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 2px 2px 0;
+  border-radius: 0 0 4px 0;
+}
+
+.score-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.score-title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* ─── Progress Card ─── */
+.progress-card {
+  background: var(--color-parchment-dark);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-card);
+}
+
+.progress-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border-light);
+  font-family: var(--font-body);
+}
+
+.progress-item:last-child {
+  border-bottom: none;
+}
+
+.progress-item.completed {
+  color: var(--color-success-dark);
+}
+
+.progress-item.current {
+  color: var(--color-burgundy);
+  font-weight: 500;
+}
+
+.progress-item.pending {
+  color: var(--color-text-tertiary);
+}
+
+.progress-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--color-success);
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.progress-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+.progress-item.current .progress-dot {
+  background: var(--color-burgundy);
+  box-shadow: 0 0 0 4px rgba(114, 47, 55, 0.2);
+}
+
+.progress-phase {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.progress-desc {
+  font-family: var(--font-body);
+}
+
+/* ─── Footer ─── */
+.app-footer {
+  text-align: center;
+  padding: var(--space-xl) 0;
+  margin-top: var(--space-2xl);
+  border-top: 1px solid var(--color-border-light);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+}
+
+.app-footer strong {
+  color: var(--color-burgundy);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .app-container {
+    padding: var(--space-md);
+  }
+
+  .app-title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .score-frame {
+    padding: var(--space-md);
+  }
+
+  .header-flourish {
+    max-width: 280px;
+  }
+
+  .progress-item {
+    flex-wrap: wrap;
+  }
+
+  .progress-phase {
+    min-width: auto;
+  }
+}

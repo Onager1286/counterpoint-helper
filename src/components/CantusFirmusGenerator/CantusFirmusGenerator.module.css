@@ -1,0 +1,172 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   CantusFirmusGenerator.module.css
+   Styled as "Composition Parameters" panel
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.container {
+  background: linear-gradient(
+    to bottom,
+    var(--color-parchment-dark) 0%,
+    var(--color-cream) 100%
+  );
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+/* Decorative top accent */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-brass),
+    transparent
+  );
+  border-radius: 0 0 2px 2px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.formRow {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.select,
+.input {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-ivory);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  transition: all 0.2s var(--ease-elegant);
+  min-width: 140px;
+}
+
+.select:focus,
+.input:focus {
+  outline: none;
+  border-color: var(--color-burgundy);
+  box-shadow: 0 0 0 3px rgba(114, 47, 55, 0.1);
+}
+
+.input {
+  width: 90px;
+}
+
+/* Generate Button */
+.generateButton {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: var(--space-sm) var(--space-xl);
+  background: linear-gradient(
+    180deg,
+    var(--color-burgundy-light) 0%,
+    var(--color-burgundy) 100%
+  );
+  color: var(--color-text-inverse);
+  border: 1px solid var(--color-burgundy-dark);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-elegant);
+  box-shadow:
+    0 2px 4px rgba(114, 47, 55, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.02em;
+}
+
+.generateButton:hover:not(:disabled) {
+  background: linear-gradient(
+    180deg,
+    var(--color-burgundy) 0%,
+    var(--color-burgundy-dark) 100%
+  );
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 8px rgba(114, 47, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.generateButton:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    0 1px 2px rgba(114, 47, 55, 0.2),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.generateButton:disabled {
+  background: var(--color-border);
+  border-color: var(--color-border-dark);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Loading state */
+.generateButton.loading {
+  position: relative;
+  color: transparent;
+}
+
+.generateButton.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid var(--color-text-inverse);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* Error Message */
+.errorMessage {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-error-light);
+  border: 1px solid var(--color-error-border);
+  border-left: 3px solid var(--color-error);
+  border-radius: var(--radius-sm);
+  color: var(--color-error-dark);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+}

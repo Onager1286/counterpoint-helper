@@ -1,0 +1,213 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   ViolationDisplay.module.css
+   Styled as "Instructor's Notes" — Educational feedback panel
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.container {
+  background: var(--color-parchment-dark);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-card);
+  animation: slideUp 0.4s var(--ease-elegant);
+}
+
+/* Summary bar */
+.summary {
+  display: flex;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border-light);
+  margin-bottom: var(--space-lg);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+}
+
+.errorCount {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-error-dark);
+}
+
+.errorCount::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--color-error);
+  border-radius: 50%;
+}
+
+.warningCount {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-warning-dark);
+}
+
+.warningCount::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--color-warning);
+  border-radius: 50%;
+}
+
+/* Success message */
+.successMessage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-success-light);
+  border: 1px solid var(--color-success-border);
+  border-left: 4px solid var(--color-success);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--color-success-dark);
+}
+
+/* Section styling */
+.section {
+  margin-top: var(--space-lg);
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px dashed var(--color-border);
+}
+
+/* Violation cards */
+.violationCard {
+  position: relative;
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-md);
+  background: var(--color-ivory);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: box-shadow 0.2s var(--ease-elegant), transform 0.2s var(--ease-elegant);
+}
+
+.violationCard:hover {
+  box-shadow: var(--shadow-subtle);
+  transform: translateY(-1px);
+}
+
+/* Error cards */
+.violationCard.errorCard {
+  background: var(--color-error-light);
+  border-color: var(--color-error-border);
+  border-left: 4px solid var(--color-error);
+}
+
+/* Warning cards */
+.violationCard.warningCard {
+  background: var(--color-warning-light);
+  border-color: var(--color-warning-border);
+  border-left: 4px solid var(--color-warning);
+}
+
+.violationHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.errorIcon,
+.warningIcon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.errorIcon {
+  color: var(--color-error);
+}
+
+.warningIcon {
+  color: var(--color-warning);
+}
+
+.violationName {
+  flex: 1;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.location {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.message {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+  margin: var(--space-sm) 0;
+}
+
+/* Educational content — Book-like styling */
+.educational {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-parchment);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+}
+
+.educational summary {
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-burgundy);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  list-style: none;
+}
+
+.educational summary::-webkit-details-marker {
+  display: none;
+}
+
+.educational summary::before {
+  content: '\25B6';
+  font-size: 10px;
+  transition: transform 0.2s var(--ease-elegant);
+}
+
+.educational[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.educational summary:hover {
+  color: var(--color-burgundy-light);
+}
+
+.educational p {
+  margin-top: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+  padding-left: var(--space-md);
+  border-left: 2px solid var(--color-brass-light);
+}
