@@ -129,6 +129,7 @@ export class VexFlowService {
       width = 800,
       measuresPerSystem = 4,
       highlightedNotes = [],
+      noteHighlights,
     } = options;
 
     // Validate inputs
@@ -208,6 +209,21 @@ export class VexFlowService {
         // Render cantus firmus notes on bass staff
         const cfStaveNotes = formatNotes(cfMeasure, 'bass');
         if (cfStaveNotes.length > 0) {
+          // Apply CF highlighting
+          if (noteHighlights) {
+            cfStaveNotes.forEach((staveNote, noteIndex) => {
+              const globalIdx = cantusFirmus.findIndex(
+                n => n.measureIndex === absoluteMeasureIndex &&
+                     cfMeasure[noteIndex] &&
+                     n.pitch === cfMeasure[noteIndex].pitch
+              );
+              const hl = noteHighlights.find(h => h.voice === 'cf' && h.index === globalIdx);
+              if (hl) {
+                staveNote.setStyle({ fillStyle: hl.color, strokeStyle: hl.color });
+              }
+            });
+          }
+
           const cfVoice = new Voice({ num_beats: 4, beat_value: 4 });
           cfVoice.addTickables(cfStaveNotes);
           new Formatter().joinVoices([cfVoice]).format([cfVoice], staveWidth - 100);
@@ -219,14 +235,19 @@ export class VexFlowService {
         if (cpMeasure && cpMeasure.length > 0) {
           const cpStaveNotes = formatNotes(cpMeasure, 'treble');
 
-          // Apply highlighting if requested
+          // Apply highlighting
           cpStaveNotes.forEach((staveNote, noteIndex) => {
             const globalNoteIndex = counterpoint.findIndex(
               n => n.measureIndex === absoluteMeasureIndex &&
                    cpMeasure[noteIndex] &&
                    n.pitch === cpMeasure[noteIndex].pitch
             );
-            if (highlightedNotes.includes(globalNoteIndex)) {
+            if (noteHighlights) {
+              const hl = noteHighlights.find(h => h.voice === 'cp' && h.index === globalNoteIndex);
+              if (hl) {
+                staveNote.setStyle({ fillStyle: hl.color, strokeStyle: hl.color });
+              }
+            } else if (highlightedNotes.includes(globalNoteIndex)) {
               staveNote.setStyle({ fillStyle: '#2196F3', strokeStyle: '#2196F3' });
             }
           });

@@ -4,7 +4,7 @@ import { useComposition } from '../../context/CompositionContext';
 import { TonePlaybackService } from '../../services/tonejs/TonePlaybackService';
 import styles from './PlaybackControls.module.css';
 
-const BPM = 80;
+const BPM = 100;
 
 function durationToTicks(duration: NoteDuration): number {
   const map: Record<NoteDuration, number> = {

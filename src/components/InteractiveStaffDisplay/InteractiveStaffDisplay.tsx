@@ -13,6 +13,7 @@ import {
   VEXFLOW_STAVE_TOP_MARGIN,
 } from '../../services/vexflow/CoordinateMapper';
 import { createNote, parsePitch } from '../../core/utils/noteParser';
+import { mapViolationsToHighlights } from '../../core/utils/violationHighlightMapper';
 import styles from './InteractiveStaffDisplay.module.css';
 
 // ─── Beat-slot ↔ position mapping ───────────────────────────────────────────
@@ -87,6 +88,7 @@ export function InteractiveStaffDisplay() {
     counterpoint,
     key,
     species,
+    analysisResult,
     addCounterpointNote,
     removeCounterpointNote,
   } = useComposition();
@@ -141,6 +143,13 @@ export function InteractiveStaffDisplay() {
     try {
       const measuresPerSystem = calculateMeasuresPerSystem(containerWidth);
 
+      const noteHighlights = mapViolationsToHighlights(
+        cantusFirmus,
+        counterpoint,
+        analysisResult?.violations ?? [],
+        selectedNoteIndex,
+      );
+
       const metadata = VexFlowService.renderGrandStaff(
         staffRef.current,
         cantusFirmus,
@@ -149,7 +158,7 @@ export function InteractiveStaffDisplay() {
         {
           width: containerWidth,
           measuresPerSystem,
-          highlightedNotes: selectedNoteIndex !== null ? [selectedNoteIndex] : [],
+          noteHighlights,
         }
       );
       metadataRef.current = metadata;
@@ -182,7 +191,7 @@ export function InteractiveStaffDisplay() {
     } catch (error) {
       console.error('Error rendering grand staff:', error);
     }
-  }, [cantusFirmus, counterpoint, key, selectedNoteIndex, cursorSlot, species, containerWidth]);
+  }, [cantusFirmus, counterpoint, key, selectedNoteIndex, cursorSlot, species, containerWidth, analysisResult]);
 
   // Handle staff clicks
   const handleStaffClick = (event: React.MouseEvent<HTMLDivElement>) => {

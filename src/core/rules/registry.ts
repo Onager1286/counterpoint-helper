@@ -1,4 +1,4 @@
-import { Rule } from '../types/analysis.types';
+import { Rule, RuleCategoryId } from '../types/analysis.types';
 import { Species } from '../types/species.types';
 import * as intervalRules from './categories/intervalRules';
 import * as motionRules from './categories/motionRules';
@@ -7,77 +7,101 @@ import * as dissonanceTreatmentRules from './categories/dissonanceTreatmentRules
 import * as cadenceRules from './categories/cadenceRules';
 import * as voiceCrossingRules from './categories/voiceCrossingRules';
 
+function tagCategory(rules: Rule[], category: RuleCategoryId): Rule[] {
+  return rules.map(r => ({ ...r, category }));
+}
+
+/**
+ * Display metadata for each rule category.
+ */
+export const RULE_CATEGORIES: Record<RuleCategoryId, { name: string; description: string }> = {
+  intervals: { name: 'Intervals', description: 'Vertical interval consonance and dissonance' },
+  motion: { name: 'Voice Motion', description: 'Parallel, similar, and contrary motion between voices' },
+  melodic: { name: 'Melodic Rules', description: 'Melodic contour, leaps, and range' },
+  dissonance: { name: 'Dissonance Treatment', description: 'Passing tones, neighbor tones, suspensions' },
+  cadence: { name: 'Cadence', description: 'Ending patterns and leading tone treatment' },
+  voiceCrossing: { name: 'Voice Crossing & Spacing', description: 'Voice independence and spacing limits' },
+};
+
+/** Ordered list of category IDs for consistent display. */
+export const RULE_CATEGORY_ORDER: RuleCategoryId[] = [
+  'intervals', 'motion', 'melodic', 'dissonance', 'cadence', 'voiceCrossing',
+];
+
 /**
  * Export all rules as flat array.
  */
 export const ALL_RULES: Rule[] = [
-  // --- Interval rules (existing) ---
-  intervalRules.consonanceRule,
-  intervalRules.firstIntervalRule,
-  intervalRules.lastIntervalRule,
-  // --- Interval rules (new) ---
-  intervalRules.downbeatConsonanceRule,
-  intervalRules.noTritonHarmonicRule,
-  intervalRules.noAugmentedDiminishedIntervalsRule,
-  intervalRules.penultimatBarConsonanceRule,
-  intervalRules.s4OffbeatConsonanceRule,
-  intervalRules.firstIntervalExpandedRule,
-  intervalRules.lastIntervalExpandedRule,
+  ...tagCategory([
+    intervalRules.consonanceRule,
+    intervalRules.firstIntervalRule,
+    intervalRules.lastIntervalRule,
+    intervalRules.downbeatConsonanceRule,
+    intervalRules.noTritonHarmonicRule,
+    intervalRules.noAugmentedDiminishedIntervalsRule,
+    intervalRules.penultimatBarConsonanceRule,
+    intervalRules.s4OffbeatConsonanceRule,
+    intervalRules.firstIntervalExpandedRule,
+    intervalRules.lastIntervalExpandedRule,
+  ], 'intervals'),
 
-  // --- Motion rules (existing) ---
-  motionRules.noParallelFifthsRule,
-  motionRules.noParallelOctavesRule,
-  motionRules.noDirectFifthsRule,
-  motionRules.noDirectOctavesRule,
-  // --- Motion rules (new) ---
-  motionRules.noParallelFifthsOffbeatRule,
-  motionRules.noParallelOctavesOffbeatRule,
-  motionRules.noVoiceCrossingConsecutiveRule,
-  motionRules.noSimilarMotionToUnisonRule,
-  motionRules.noLeapfrogFifthsRule,
-  motionRules.noLeapfrogOctavesRule,
+  ...tagCategory([
+    motionRules.noParallelFifthsRule,
+    motionRules.noParallelOctavesRule,
+    motionRules.noDirectFifthsRule,
+    motionRules.noDirectOctavesRule,
+    motionRules.noParallelFifthsOffbeatRule,
+    motionRules.noParallelOctavesOffbeatRule,
+    motionRules.noVoiceCrossingConsecutiveRule,
+    motionRules.noSimilarMotionToUnisonRule,
+    motionRules.noLeapfrogFifthsRule,
+    motionRules.noLeapfrogOctavesRule,
+  ], 'motion'),
 
-  // --- Melodic rules (existing, now expanded to all species) ---
-  melodicRules.preferContraryMotionRule,
-  melodicRules.recoverLeapsRule,
-  melodicRules.climaxApproachRule,
-  // --- Melodic rules (new) ---
-  melodicRules.rangeLimitRule,
-  melodicRules.noLeapOfSeventhOrMoreRule,
-  melodicRules.noRepeatedNotesRule,
-  melodicRules.noConsecutiveLeapsSameDirectionRule,
-  melodicRules.noThreeConsecutiveLeapsRule,
-  melodicRules.singleClimaxRule,
-  melodicRules.singleNadirRule,
-  melodicRules.noLeapToOffbeatDissonanceRule,
-  melodicRules.noLargeLeapAfterOffbeatDissonanceRule,
+  ...tagCategory([
+    melodicRules.preferContraryMotionRule,
+    melodicRules.recoverLeapsRule,
+    melodicRules.climaxApproachRule,
+    melodicRules.rangeLimitRule,
+    melodicRules.noLeapOfSeventhOrMoreRule,
+    melodicRules.noRepeatedNotesRule,
+    melodicRules.noConsecutiveLeapsSameDirectionRule,
+    melodicRules.noThreeConsecutiveLeapsRule,
+    melodicRules.singleClimaxRule,
+    melodicRules.singleNadirRule,
+    melodicRules.noLeapToOffbeatDissonanceRule,
+    melodicRules.noLargeLeapAfterOffbeatDissonanceRule,
+  ], 'melodic'),
 
-  // --- Dissonance treatment rules (new) ---
-  dissonanceTreatmentRules.s2PassingToneRule,
-  dissonanceTreatmentRules.s3PassingToneRule,
-  dissonanceTreatmentRules.s3NeighborToneRule,
-  dissonanceTreatmentRules.s3CambiataEscapeRule,
-  dissonanceTreatmentRules.s4SuspensionPreparationRule,
-  dissonanceTreatmentRules.s4SuspensionResolutionRule,
-  dissonanceTreatmentRules.s4SuspensionResolutionDirectionRule,
-  dissonanceTreatmentRules.s5AllDissonanceTreatmentsRule,
+  ...tagCategory([
+    dissonanceTreatmentRules.s2PassingToneRule,
+    dissonanceTreatmentRules.s3PassingToneRule,
+    dissonanceTreatmentRules.s3NeighborToneRule,
+    dissonanceTreatmentRules.s3CambiataEscapeRule,
+    dissonanceTreatmentRules.s4SuspensionPreparationRule,
+    dissonanceTreatmentRules.s4SuspensionResolutionRule,
+    dissonanceTreatmentRules.s4SuspensionResolutionDirectionRule,
+    dissonanceTreatmentRules.s5AllDissonanceTreatmentsRule,
+  ], 'dissonance'),
 
-  // --- Cadence rules (new) ---
-  cadenceRules.penultimatLeadingToneRule,
-  cadenceRules.penultimateApproachesByStepRule,
-  cadenceRules.s4CadentialSuspensionRule,
-  cadenceRules.finalNoteIsTonicRule,
-  cadenceRules.cadenceNoOffbeatDissonanceRule,
-  cadenceRules.noCadenceAtClimaxRule,
+  ...tagCategory([
+    cadenceRules.penultimatLeadingToneRule,
+    cadenceRules.penultimateApproachesByStepRule,
+    cadenceRules.s4CadentialSuspensionRule,
+    cadenceRules.finalNoteIsTonicRule,
+    cadenceRules.cadenceNoOffbeatDissonanceRule,
+    cadenceRules.noCadenceAtClimaxRule,
+  ], 'cadence'),
 
-  // --- Voice crossing rules (new) ---
-  voiceCrossingRules.noVoiceCrossingRule,
-  voiceCrossingRules.noConsecutiveUnisonsRule,
-  voiceCrossingRules.spacingNotTooWideRule,
-  voiceCrossingRules.noUnisonAfterCrossingAttemptRule,
-  voiceCrossingRules.avoidParallelImperfectToPerfectRule,
-  voiceCrossingRules.avoidConsecutivePerfectsSameRule,
-  voiceCrossingRules.noDoubleNeighborRule,
+  ...tagCategory([
+    voiceCrossingRules.noVoiceCrossingRule,
+    voiceCrossingRules.noConsecutiveUnisonsRule,
+    voiceCrossingRules.spacingNotTooWideRule,
+    voiceCrossingRules.noUnisonAfterCrossingAttemptRule,
+    voiceCrossingRules.avoidParallelImperfectToPerfectRule,
+    voiceCrossingRules.avoidConsecutivePerfectsSameRule,
+    voiceCrossingRules.noDoubleNeighborRule,
+  ], 'voiceCrossing'),
 ];
 
 /**
@@ -86,6 +110,19 @@ export const ALL_RULES: Rule[] = [
  */
 export function getRulesForSpecies(species: Species): Rule[] {
   return ALL_RULES.filter(rule => rule.species.includes(species));
+}
+
+/**
+ * Get rules for a species, grouped by category in display order.
+ */
+export function getRulesGroupedByCategory(species: Species): { categoryId: RuleCategoryId; rules: Rule[] }[] {
+  const speciesRules = getRulesForSpecies(species);
+  return RULE_CATEGORY_ORDER
+    .map(categoryId => ({
+      categoryId,
+      rules: speciesRules.filter(r => r.category === categoryId),
+    }))
+    .filter(group => group.rules.length > 0);
 }
 
 /**

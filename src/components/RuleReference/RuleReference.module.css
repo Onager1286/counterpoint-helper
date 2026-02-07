@@ -1,0 +1,227 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   RuleReference.module.css
+   Collapsible rule browser — Classical Music Study Chamber theme
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.container {
+  background: linear-gradient(
+    to bottom,
+    var(--color-parchment-dark) 0%,
+    var(--color-cream) 100%
+  );
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* ─── Toggle Button ─── */
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-lg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.toggle:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--color-burgundy);
+  outline-offset: -2px;
+}
+
+.toggleContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.count {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.chevron {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-tertiary);
+  transition: transform 0.2s var(--ease-elegant);
+  flex-shrink: 0;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ─── Body ─── */
+
+.body {
+  padding: 0 var(--space-lg) var(--space-lg);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.intro {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-lg);
+}
+
+/* ─── Category Group ─── */
+
+.category {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+  background: var(--color-ivory);
+}
+
+.category[open] {
+  background: var(--color-parchment);
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.categoryHeader::-webkit-details-marker {
+  display: none;
+}
+
+.categoryHeader::marker {
+  content: '';
+}
+
+.categoryName {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.categoryCount {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  background: var(--color-parchment-dark);
+  border: 1px solid var(--color-border-light);
+  border-radius: 10px;
+  padding: 1px 8px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.categoryDescription {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  padding: 0 var(--space-md);
+  margin-bottom: var(--space-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ─── Rule List ─── */
+
+.ruleList {
+  list-style: none;
+  padding: 0 var(--space-md) var(--space-md);
+  margin: 0;
+}
+
+.ruleItem {
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.ruleItem:first-child {
+  border-top: none;
+}
+
+.ruleHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.ruleName {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.badgeError {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-error-dark);
+  background: var(--color-error-light);
+  border: 1px solid var(--color-error-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.badgeWarning {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-warning-dark);
+  background: var(--color-warning-light);
+  border: 1px solid var(--color-warning-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.ruleDescription {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  line-height: var(--line-height-relaxed);
+  margin-top: 2px;
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 768px) {
+  .toggle {
+    padding: var(--space-md);
+  }
+
+  .body {
+    padding: 0 var(--space-md) var(--space-md);
+  }
+}

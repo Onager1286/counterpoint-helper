@@ -4,6 +4,7 @@ import { InteractiveStaffDisplay } from './components/InteractiveStaffDisplay';
 import { AnalysisPanel } from './components/AnalysisPanel';
 import { PlaybackControls } from './components/PlaybackControls';
 import { SpeciesSelector } from './components/SpeciesSelector';
+import { RuleReference } from './components/RuleReference';
 import './App.css';
 
 function AppContent() {
@@ -27,6 +28,11 @@ function AppContent() {
         {/* Species Selection */}
         <section className="section section-species">
           <SpeciesSelector />
+        </section>
+
+        {/* Rule Reference */}
+        <section className="section section-rules">
+          <RuleReference />
         </section>
 
         {/* Cantus Firmus Generator Section */}

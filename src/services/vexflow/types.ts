@@ -45,6 +45,15 @@ export interface RenderOptions {
 }
 
 /**
+ * A single note highlight with voice, index, and color
+ */
+export interface NoteHighlight {
+  voice: 'cf' | 'cp';
+  index: number;
+  color: string;
+}
+
+/**
  * Options for rendering a grand staff (treble + bass)
  */
 export interface GrandStaffRenderOptions extends RenderOptions {
@@ -53,6 +62,12 @@ export interface GrandStaffRenderOptions extends RenderOptions {
    * @default []
    */
   highlightedNotes?: number[];
+
+  /**
+   * Per-note highlights with voice, index, and color.
+   * Takes precedence over highlightedNotes when provided.
+   */
+  noteHighlights?: NoteHighlight[];
 }
 
 /**

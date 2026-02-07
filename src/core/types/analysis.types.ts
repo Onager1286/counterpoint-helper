@@ -33,12 +33,15 @@ export interface RuleContext {
   counterpoint: Note[];
 }
 
+export type RuleCategoryId = 'intervals' | 'motion' | 'melodic' | 'dissonance' | 'cadence' | 'voiceCrossing';
+
 export interface Rule {
   id: string;
   name: string;
   severity: Severity;
   species: Species[];
   description: string;
+  category?: RuleCategoryId;
   check: (context: RuleContext) => Violation[];
 }
 
