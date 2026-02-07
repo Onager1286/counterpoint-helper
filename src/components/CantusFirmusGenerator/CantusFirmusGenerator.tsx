@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { useComposition } from '../../context/CompositionContext';
 import { CantusFirmusGenerator } from '../../core/generators/cantusFirmusGenerator';
 import { getAllKeyNames, parseKey } from '../../core/utils/keySignatures';
-import { Species } from '../../core/types/species.types';
 import styles from './CantusFirmusGenerator.module.css';
 
 export function CantusFirmusGeneratorComponent() {
-  const { setCantusFirmus, setKey, clearCounterpoint, species, setSpecies } = useComposition();
+  const { setCantusFirmus, setKey, clearCounterpoint } = useComposition();
   const [selectedKey, setSelectedKey] = useState('C major');
   const [length, setLength] = useState(8);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -41,25 +40,6 @@ export function CantusFirmusGeneratorComponent() {
       <h2 className={styles.title}>Cantus Firmus Generator</h2>
 
       <div className={styles.formRow}>
-        <div className={styles.formGroup}>
-          <label className={styles.label}>
-            Species
-          </label>
-          <select
-            value={species}
-            onChange={(e) => {
-              setSpecies(parseInt(e.target.value, 10) as Species);
-              clearCounterpoint();
-            }}
-            className={styles.select}
-          >
-            <option value={Species.First}>First Species — whole notes</option>
-            <option value={Species.Second}>Second Species — half notes</option>
-            <option value={Species.Third}>Third Species — quarter notes</option>
-            <option value={Species.Fourth}>Fourth Species — syncopation</option>
-          </select>
-        </div>
-
         <div className={styles.formGroup}>
           <label className={styles.label}>
             Key

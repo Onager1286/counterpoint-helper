@@ -1,0 +1,121 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   SpeciesSelector.module.css
+   Card-grid species picker — Classical Music Study Chamber theme
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.container {
+  background: linear-gradient(
+    to bottom,
+    var(--color-parchment-dark) 0%,
+    var(--color-cream) 100%
+  );
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+/* Decorative top accent */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-brass),
+    transparent
+  );
+  border-radius: 0 0 2px 2px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-lg);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ─── Card Grid ─── */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-md);
+}
+
+/* ─── Individual Card ─── */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-sm);
+  background: var(--color-ivory);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-elegant);
+  text-align: center;
+}
+
+.card:hover:not(.active) {
+  border-color: var(--color-border-dark);
+  box-shadow: var(--shadow-subtle);
+  transform: translateY(-2px);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-burgundy);
+  outline-offset: 2px;
+}
+
+/* Active state */
+.card.active {
+  background: var(--color-parchment-dark);
+  border: 2px solid var(--color-burgundy);
+  box-shadow: 0 0 0 3px rgba(114, 47, 55, 0.1);
+}
+
+/* ─── Card Content ─── */
+
+.numeral {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: 500;
+  color: var(--color-brass);
+  line-height: 1;
+}
+
+.card.active .numeral {
+  color: var(--color-burgundy);
+}
+
+.name {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.description {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  line-height: var(--line-height-relaxed);
+}

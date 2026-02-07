@@ -20,16 +20,16 @@ No test runner is configured. `npm run build` is the primary correctness gate: i
 
 ## Project Status
 
-Phases 1–6 complete. Phase 7 (MIDI Playback) and Phase 8 (Polish) remain.
+Phases 1–7 complete. Phase 8 (Polish & Educational Content) remains.
 
-**Recently completed:** UI redesign with "Classical Music Study Chamber" theme.
+**Recently completed:** Phase 7 — MIDI playback via Tone.js with PlaybackControls UI. Phase 6 UI redesign with "Classical Music Study Chamber" theme.
 
 ## Architecture
 
 ### Tech Stack
 - React 18 + TypeScript 5 (strict) + Vite 5
 - VexFlow 4.2 — music notation rendering (imperative DOM API, wrapped by a static service class)
-- Tone.js 14.7 — installed in `package.json`, not yet integrated (Phase 7)
+- Tone.js 14.7 — MIDI playback via `TonePlaybackService` (static class, dual PolySynth)
 - Pure client-side; no backend
 
 ### Source Layout
@@ -55,6 +55,8 @@ src/
 │       ├── noteParser.ts         # parsePitch(), createNote(), formatNote()
 │       └── vexflowFormatters.ts  # pitchToVexFlow(), durationToVexFlow()
 ├── services/
+│   ├── tonejs/
+│   │   └── TonePlaybackService.ts  # Static class — init(), play(), stop(), dual-synth playback
 │   └── vexflow/
 │       ├── VexFlowService.ts     # Static class — render() and renderGrandStaff()
 │       ├── types.ts              # RenderOptions, GrandStaffRenderOptions, RenderMetadata
@@ -69,6 +71,18 @@ src/
 │   ├── InteractiveStaffDisplay/
 │   │   ├── InteractiveStaffDisplay.tsx
 │   │   └── InteractiveStaffDisplay.module.css
+│   ├── SpeciesSelector/
+│   │   ├── SpeciesSelector.tsx      # Card-grid species picker (I–V)
+│   │   ├── SpeciesSelector.module.css
+│   │   └── index.ts
+│   ├── AnalysisPanel/
+│   │   ├── AnalysisPanel.tsx        # Submit-based analysis UI with completeness checks
+│   │   ├── AnalysisPanel.module.css
+│   │   └── index.ts
+│   ├── PlaybackControls/
+│   │   ├── PlaybackControls.tsx     # Play/Stop, tempo display, Tone.js integration
+│   │   ├── PlaybackControls.module.css
+│   │   └── index.ts
 │   ├── ViolationDisplay/
 │   │   ├── ViolationDisplay.tsx
 │   │   └── ViolationDisplay.module.css
@@ -81,7 +95,7 @@ src/
 
 **1. Separation of Concerns** — `core/` is pure logic with no React imports. All business logic lives there and is reachable without rendering anything.
 
-**2. Global State via Context** — `CompositionContext` holds `cantusFirmus`, `counterpoint`, `species`, `key`, and `analysisResult`. Mutations like `addCounterpointNote()` and `removeCounterpointNote()` automatically re-run `analyzeComposition()`. Components should never call `analyzeComposition()` directly.
+**2. Global State via Context** — `CompositionContext` holds `cantusFirmus`, `counterpoint`, `species`, `key`, and `analysisResult`. Analysis is triggered manually via `submitAnalysis()` (not automatic). The `AnalysisPanel` component manages the submit flow with completeness checking and stale-result detection. Components should call `submitAnalysis()` rather than `analyzeComposition()` directly.
 
 **3. Rule Engine** — Each rule is a standalone object (id, name, severity, species[], check). Rules are organised by musical category, not by species. `analyzeComposition()` filters by species and runs all matching checks. See the Rule Implementation section below for the pattern and ID conventions.
 
@@ -237,16 +251,21 @@ const metadata = VexFlowService.renderGrandStaff(
 
 ---
 
-## Phase 7: MIDI Playback (next)
+## Tone.js Playback Service
 
-Tone.js 14.7 is already in `package.json`. The planned integration follows the VexFlowService pattern:
+`TonePlaybackService` (static class in `src/services/tonejs/`) wraps Tone.js:
 
-- `src/services/playback/PlaybackService.ts` — static or singleton service wrapping Tone.js. Expose `init()` (must be called from a user-gesture click handler to start AudioContext), `play(notes)`, `stop()`, `pause()`.
+- `init()` — must be called from a user-gesture handler to start AudioContext. Creates two `PolySynth` instances (CF and CP) with different timbres.
+- `play(cf, cp, options?)` — schedules CF and CP notes on separate synths. Returns a `PlaybackHandle` with `stop()`.
+- `stop()` — stops transport and disposes scheduled events.
 - Duration mapping: `NoteDuration` `'1'|'2'|'4'|'8'|'16'` → Tone.js `'1n'|'2n'|'4n'|'8n'|'16n'`.
-- Playback modes: CF only, CP only, both (different timbres/pans).
-- UI: Play/Pause/Stop, BPM control, note highlight during playback.
+- Default BPM: 80.
 
-## Phase 8: Polish & Educational Content
+`PlaybackControls` component provides Play/Stop toggle and tempo display.
+
+---
+
+## Phase 8: Polish & Educational Content (next)
 
 - Species selector UI (state exists in context, no picker yet)
 - Staff note highlighting when violations reference specific notes

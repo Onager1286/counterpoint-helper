@@ -3,6 +3,7 @@ import { CantusFirmusGeneratorComponent } from './components/CantusFirmusGenerat
 import { InteractiveStaffDisplay } from './components/InteractiveStaffDisplay';
 import { AnalysisPanel } from './components/AnalysisPanel';
 import { PlaybackControls } from './components/PlaybackControls';
+import { SpeciesSelector } from './components/SpeciesSelector';
 import './App.css';
 
 function AppContent() {
@@ -23,6 +24,11 @@ function AppContent() {
       </header>
 
       <main className="app-main">
+        {/* Species Selection */}
+        <section className="section section-species">
+          <SpeciesSelector />
+        </section>
+
         {/* Cantus Firmus Generator Section */}
         <section className="section section-generator">
           <CantusFirmusGeneratorComponent />
