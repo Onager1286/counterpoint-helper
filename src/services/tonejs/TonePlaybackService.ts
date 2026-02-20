@@ -14,6 +14,10 @@ const DEFAULT_BPM = 80;
 export class TonePlaybackService {
   private static cfSynth: Tone.PolySynth | null = null;
   private static cpSynth: Tone.PolySynth | null = null;
+  private static sampler: Tone.Sampler | null = null;
+  private static samplesLoaded = false;
+  private static samplesFailed = false;
+  private static samplesLoading: Promise<void> | null = null;
   private static initialized = false;
 
   static init(): void {
@@ -33,6 +37,52 @@ export class TonePlaybackService {
     this.cpSynth.volume.value = -6;
 
     this.initialized = true;
+  }
+
+  private static createSampler(): Tone.Sampler {
+    return new Tone.Sampler({
+      urls: {
+        C2: 'C2.mp3',
+        C3: 'C3.mp3',
+        E3: 'E3.mp3',
+        G3: 'G3.mp3',
+        C4: 'C4.mp3',
+        E4: 'E4.mp3',
+        G4: 'G4.mp3',
+        C5: 'C5.mp3',
+        E5: 'E5.mp3',
+        C6: 'C6.mp3',
+      },
+      release: 1.2,
+      baseUrl: '/samples/piano/',
+    }).toDestination();
+  }
+
+  static async preloadSamples(): Promise<void> {
+    if (this.samplesLoaded || this.samplesFailed) return;
+    if (this.samplesLoading) return this.samplesLoading;
+
+    this.samplesLoading = (async () => {
+      try {
+        if (!this.sampler) {
+          this.sampler = this.createSampler();
+          this.sampler.volume.value = -8;
+        }
+        await this.sampler.load();
+        this.samplesLoaded = true;
+      } catch (error) {
+        console.error('Sample load failed, falling back to synths.', error);
+        this.samplesFailed = true;
+      } finally {
+        this.samplesLoading = null;
+      }
+    })();
+
+    return this.samplesLoading;
+  }
+
+  static isSamplesLoaded(): boolean {
+    return this.samplesLoaded;
   }
 
   static durationToTicks(duration: NoteDuration): number {
@@ -79,6 +129,7 @@ export class TonePlaybackService {
 
     await Tone.start();
     this.init();
+    await this.preloadSamples();
 
     const bpm = options.bpm ?? DEFAULT_BPM;
     Tone.Transport.stop();
@@ -87,10 +138,11 @@ export class TonePlaybackService {
     Tone.Transport.bpm.value = bpm;
     Tone.Transport.timeSignature = [4, 4];
 
+    const sampler = this.samplesLoaded ? this.sampler : null;
     const cfSynth = this.cfSynth;
     const cpSynth = this.cpSynth;
 
-    if (!cfSynth || !cpSynth) {
+    if (!sampler && (!cfSynth || !cpSynth)) {
       return { stop: () => undefined };
     }
 
@@ -98,7 +150,11 @@ export class TonePlaybackService {
       const time = this.noteToTransportTime(note.measureIndex, note.beatPosition);
       const duration = Tone.Time('16n').toSeconds() * this.durationToTicks(note.duration);
       Tone.Transport.schedule((transportTime) => {
-        cfSynth.triggerAttackRelease(note.pitch, duration, transportTime);
+        if (sampler) {
+          sampler.triggerAttackRelease(note.pitch, duration, transportTime);
+        } else {
+          cfSynth?.triggerAttackRelease(note.pitch, duration, transportTime);
+        }
       }, time);
     }
 
@@ -106,7 +162,11 @@ export class TonePlaybackService {
       const time = this.noteToTransportTime(note.measureIndex, note.beatPosition);
       const duration = Tone.Time('16n').toSeconds() * this.durationToTicks(note.duration);
       Tone.Transport.schedule((transportTime) => {
-        cpSynth.triggerAttackRelease(note.pitch, duration, transportTime);
+        if (sampler) {
+          sampler.triggerAttackRelease(note.pitch, duration, transportTime);
+        } else {
+          cpSynth?.triggerAttackRelease(note.pitch, duration, transportTime);
+        }
       }, time);
     }
 
@@ -132,5 +192,6 @@ export class TonePlaybackService {
     Tone.Transport.cancel(0);
     this.cfSynth?.releaseAll?.();
     this.cpSynth?.releaseAll?.();
+    this.sampler?.releaseAll?.();
   }
 }

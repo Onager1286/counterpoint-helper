@@ -4,7 +4,7 @@ import { useComposition } from '../../context/CompositionContext';
 import { TonePlaybackService } from '../../services/tonejs/TonePlaybackService';
 import styles from './PlaybackControls.module.css';
 
-const BPM = 100;
+const BPM = 80;
 
 function durationToTicks(duration: NoteDuration): number {
   const map: Record<NoteDuration, number> = {
@@ -42,6 +42,7 @@ function estimatePlaybackMs(
 export function PlaybackControls() {
   const { cantusFirmus, counterpoint } = useComposition();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoadingSamples, setIsLoadingSamples] = useState(false);
   const stopTimeoutRef = useRef<number | null>(null);
 
   const canPlay = Boolean(cantusFirmus && cantusFirmus.length > 0);
@@ -67,6 +68,7 @@ export function PlaybackControls() {
 
   const handleToggle = async () => {
     if (!canPlay) return;
+    if (isLoadingSamples) return;
 
     if (isPlaying) {
       TonePlaybackService.stop();
@@ -85,6 +87,9 @@ export function PlaybackControls() {
     }
 
     try {
+      setIsLoadingSamples(true);
+      await TonePlaybackService.preloadSamples();
+      setIsLoadingSamples(false);
       await TonePlaybackService.play(cantusFirmus ?? [], counterpoint, { bpm: BPM });
       const durationMs = estimatePlaybackMs(cantusFirmus, counterpoint, BPM);
       if (durationMs > 0) {
@@ -95,6 +100,7 @@ export function PlaybackControls() {
       }
     } catch (error) {
       console.error('Playback failed to start.', error);
+      setIsLoadingSamples(false);
       setIsPlaying(false);
     }
   };
@@ -105,11 +111,11 @@ export function PlaybackControls() {
         type="button"
         className={styles.playButton}
         onClick={handleToggle}
-        disabled={!canPlay}
+        disabled={!canPlay || isLoadingSamples}
       >
-        {isPlaying ? 'Stop' : 'Play'}
+        {isLoadingSamples ? 'Loading…' : (isPlaying ? 'Stop' : 'Play')}
       </button>
-      <span className={styles.tempoTag}>80 BPM</span>
+      <span className={styles.tempoTag}>{BPM} BPM</span>
     </div>
   );
 }

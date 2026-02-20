@@ -1,17 +1,10 @@
 import { useRef, useEffect, useState } from 'react';
 import { useComposition } from '../../context/CompositionContext';
-import { VexFlowService } from '../../services/vexflow/VexFlowService';
+import { VexFlowService, VEXFLOW_STAVE_TOP_MARGIN } from '../../services/vexflow/VexFlowService';
 import type { RenderMetadata } from '../../services/vexflow/types';
 import type { NoteDuration } from '../../core/types/music.types';
 import type { Key } from '../../core/types/key.types';
 import { Species, SPECIES_CONFIGS } from '../../core/types/species.types';
-import {
-  yCoordinateToPitch,
-  xCoordinateToBeatPosition,
-  isClickInStaffBounds,
-  getSystemIndex,
-  VEXFLOW_STAVE_TOP_MARGIN,
-} from '../../services/vexflow/CoordinateMapper';
 import { createNote, parsePitch } from '../../core/utils/noteParser';
 import { mapViolationsToHighlights } from '../../core/utils/violationHighlightMapper';
 import styles from './InteractiveStaffDisplay.module.css';
@@ -93,7 +86,6 @@ export function InteractiveStaffDisplay() {
     removeCounterpointNote,
   } = useComposition();
 
-  const [selectedNoteIndex, setSelectedNoteIndex] = useState<number | null>(null);
   const [cursorSlot, setCursorSlot] = useState<number>(0);
   const [containerWidth, setContainerWidth] = useState<number>(800);
 
@@ -147,7 +139,7 @@ export function InteractiveStaffDisplay() {
         cantusFirmus,
         counterpoint,
         analysisResult?.violations ?? [],
-        selectedNoteIndex,
+        null,
       );
 
       const metadata = VexFlowService.renderGrandStaff(
@@ -191,90 +183,7 @@ export function InteractiveStaffDisplay() {
     } catch (error) {
       console.error('Error rendering grand staff:', error);
     }
-  }, [cantusFirmus, counterpoint, key, selectedNoteIndex, cursorSlot, species, containerWidth, analysisResult]);
-
-  // Handle staff clicks
-  const handleStaffClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!staffRef.current || !metadataRef.current || !cantusFirmus) {
-      return;
-    }
-
-    const metadata = metadataRef.current;
-    const rect = staffRef.current.getBoundingClientRect();
-
-    // Get click coordinates relative to container
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    // Determine which system was clicked
-    const systemIndex = getSystemIndex(
-      y,
-      metadata.systemHeight,
-      metadata.systemSpacing,
-      metadata.topPadding
-    );
-
-    // Calculate Y position relative to the system
-    const systemY = metadata.topPadding + (systemIndex * (metadata.systemHeight + metadata.systemSpacing));
-    // Add VexFlow's internal top margin to get actual staff line position
-    const trebleStaveY = systemY + metadata.trebleStaveY + VEXFLOW_STAVE_TOP_MARGIN;
-
-    // Check if click is within treble staff bounds (ignore bass staff)
-    if (!isClickInStaffBounds(y, trebleStaveY)) {
-      return;
-    }
-
-    // Map X coordinate to measure index + beat position (snaps to cursor centres)
-    const npm = effectiveNotesPerMeasure(species);
-    const { measureIndex, beatPosition } = xCoordinateToBeatPosition(
-      x,
-      metadata.staveWidth,
-      metadata.measuresPerSystem,
-      systemIndex,
-      BEAT_POSITIONS[npm]
-    );
-
-    // Map Y coordinate to diatonic pitch (key-aware) with nearest-octave selection
-    let referenceMidi = 60;
-    if (counterpoint.length > 0) {
-      referenceMidi = counterpoint[counterpoint.length - 1].midiNumber;
-    } else {
-      const cfNote = cantusFirmus[measureIndex];
-      if (cfNote) referenceMidi = cfNote.midiNumber;
-    }
-    const pitch = yCoordinateToPitch(y, trebleStaveY, 'treble', key, referenceMidi);
-
-    if (measureIndex >= cantusFirmus.length) {
-      return;
-    }
-
-    // Collision check: exact (measure, beat) slot — same predicate as keyboard handler
-    const existingNoteIndex = counterpoint.findIndex(
-      n => n.measureIndex === measureIndex && n.beatPosition === beatPosition
-    );
-
-    if (existingNoteIndex !== -1) {
-      // Toggle select / delete
-      if (selectedNoteIndex === existingNoteIndex) {
-        removeCounterpointNote(existingNoteIndex);
-        setSelectedNoteIndex(null);
-      } else {
-        setSelectedNoteIndex(existingNoteIndex);
-      }
-    } else {
-      // Create note at this beat slot
-      const newNote = createNote(
-        pitch,
-        durationForSpecies(species),
-        measureIndex,
-        beatPosition,
-        1  // scaleDegree placeholder
-      );
-
-      addCounterpointNote(newNote);
-      setSelectedNoteIndex(null);
-    }
-  };
+  }, [cantusFirmus, counterpoint, key, cursorSlot, species, containerWidth, analysisResult]);
 
   // Keyboard handler: step-entry (A–G), octave shift (↑↓), backspace, legacy delete
   useEffect(() => {
@@ -324,7 +233,6 @@ export function InteractiveStaffDisplay() {
 
         addCounterpointNote(createNote(pitch, duration, measureIndex, beatPosition, 1));
         setCursorSlot(prev => Math.min(prev + 1, total));
-        setSelectedNoteIndex(null);
         return;
       }
 
@@ -367,20 +275,13 @@ export function InteractiveStaffDisplay() {
           removeCounterpointNote(idx);
         }
         setCursorSlot(prev => prev - 1);
-        setSelectedNoteIndex(null);
         return;
-      }
-
-      // ── Delete: legacy click-select removal ──
-      if (e.key === 'Delete' && selectedNoteIndex !== null) {
-        removeCounterpointNote(selectedNoteIndex);
-        setSelectedNoteIndex(null);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [cantusFirmus, counterpoint, key, species, cursorSlot, selectedNoteIndex, addCounterpointNote, removeCounterpointNote]);
+  }, [cantusFirmus, counterpoint, key, species, cursorSlot, addCounterpointNote, removeCounterpointNote]);
 
   // Show empty state if no CF generated yet
   if (!cantusFirmus || cantusFirmus.length === 0) {
@@ -398,15 +299,16 @@ export function InteractiveStaffDisplay() {
       <div className={styles.instructions}>
         <strong>Instructions:</strong> Press <strong>A–G</strong> to enter notes step by step.
         <strong> ↑ ↓</strong> adjust the last note&apos;s octave. <strong>Backspace</strong> removes it.
-        You can also click the treble staff directly to place notes.
+        Keyboard only: press <strong>A–G</strong> to place notes in beat order.
+        <strong> ↑ ↓</strong> adjust the last note&apos;s octave. <strong>Backspace</strong> removes it.
         {species === Species.First && (
           <span> Each measure takes one whole note.</span>
         )}
         {species === Species.Second && (
-          <span> Each measure takes two half notes — click the left or right half of a measure.</span>
+          <span> Each measure takes two half notes.</span>
         )}
         {species === Species.Third && (
-          <span> Each measure takes four quarter notes — click anywhere in the measure to select the beat.</span>
+          <span> Each measure takes four quarter notes.</span>
         )}
         {species === Species.Fourth && (
           <span> Each measure takes two half notes. Syncopation (ties) is evaluated during analysis.</span>
@@ -416,14 +318,8 @@ export function InteractiveStaffDisplay() {
       <div
         ref={staffRef}
         className={styles.staffContainer}
-        onClick={handleStaffClick}
       />
 
-      {selectedNoteIndex !== null && (
-        <div className={styles.selectionHint}>
-          Note selected. Click again to delete, or press Delete/Backspace.
-        </div>
-      )}
     </div>
   );
 }

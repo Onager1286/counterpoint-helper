@@ -9,6 +9,8 @@ import { keyToVexFlowSignature } from '../../core/utils/vexflowFormatters';
  * Service for rendering musical notation using VexFlow.
  * Provides a stateless interface for displaying notes on a musical staff.
  */
+export const VEXFLOW_STAVE_TOP_MARGIN = 40;
+
 export class VexFlowService {
   /**
    * Renders musical notes on a staff using VexFlow.

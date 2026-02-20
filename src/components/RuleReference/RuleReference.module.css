@@ -22,7 +22,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: var(--space-lg);
+  padding: var(--space-md);
   background: none;
   border: none;
   cursor: pointer;
@@ -73,7 +73,7 @@
 /* ─── Body ─── */
 
 .body {
-  padding: 0 var(--space-lg) var(--space-lg);
+  padding: 0 var(--space-md) var(--space-md);
   animation: fadeIn 0.2s ease;
 }
 
@@ -87,7 +87,7 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 /* ─── Category Group ─── */
@@ -107,7 +107,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
   cursor: pointer;
   list-style: none;
   user-select: none;
@@ -158,7 +158,7 @@
 }
 
 .ruleItem {
-  padding: var(--space-sm) 0;
+  padding: var(--space-xs) 0;
   border-top: 1px solid var(--color-border-light);
 }
 

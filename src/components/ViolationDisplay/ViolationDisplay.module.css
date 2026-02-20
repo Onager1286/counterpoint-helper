@@ -7,7 +7,7 @@
   background: var(--color-parchment-dark);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
-  padding: var(--space-lg);
+  padding: var(--space-md);
   box-shadow: var(--shadow-card);
   animation: slideUp 0.4s var(--ease-elegant);
 }
@@ -18,7 +18,7 @@
   gap: var(--space-lg);
   padding-bottom: var(--space-md);
   border-bottom: 1px solid var(--color-border-light);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
   font-family: var(--font-ui);
   font-weight: 600;
   font-size: var(--font-size-base);
@@ -73,7 +73,7 @@
 
 /* Section styling */
 .section {
-  margin-top: var(--space-lg);
+  margin-top: var(--space-md);
 }
 
 .sectionTitle {
@@ -89,7 +89,7 @@
 /* Violation cards */
 .violationCard {
   position: relative;
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
   margin-bottom: var(--space-md);
   background: var(--color-ivory);
   border: 1px solid var(--color-border);

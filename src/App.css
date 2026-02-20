@@ -7,7 +7,7 @@
 .app-container {
   max-width: var(--max-width-content);
   margin: 0 auto;
-  padding: var(--space-lg) var(--space-xl);
+  padding: var(--space-lg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -16,8 +16,8 @@
 /* ─── Header ─── */
 .app-header {
   text-align: center;
-  padding: var(--space-2xl) 0;
-  margin-bottom: var(--space-xl);
+  padding: var(--space-lg) 0;
+  margin-bottom: var(--space-md);
 }
 
 .header-content {
@@ -26,7 +26,7 @@
 
 .app-title {
   font-family: var(--font-display);
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-3xl);
   font-weight: 500;
   color: var(--color-burgundy);
   letter-spacing: 0.02em;
@@ -36,7 +36,7 @@
 
 .app-subtitle {
   font-family: var(--font-body);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   color: var(--color-text-secondary);
   font-weight: 400;
 }
@@ -54,8 +54,8 @@
 /* Header Flourish */
 .header-flourish {
   height: 3px;
-  margin: var(--space-lg) auto;
-  max-width: 400px;
+  margin: var(--space-md) auto;
+  max-width: 340px;
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -72,9 +72,7 @@
 /* ─── Main Content ─── */
 .app-main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
+  display: block;
 }
 
 /* ─── Sections ─── */
@@ -109,7 +107,7 @@
   background: var(--color-parchment-dark);
   border: 2px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-xl);
+  padding: var(--space-lg);
   box-shadow:
     var(--shadow-elevated),
     inset 0 0 30px rgba(90, 83, 71, 0.04);
@@ -154,7 +152,7 @@
 
 .score-header {
   text-align: center;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -167,84 +165,6 @@
   font-weight: 500;
   color: var(--color-text-primary);
   margin: 0;
-}
-
-/* ─── Progress Card ─── */
-.progress-card {
-  background: var(--color-parchment-dark);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-card);
-}
-
-.progress-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.progress-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-sm) 0;
-  border-bottom: 1px solid var(--color-border-light);
-  font-family: var(--font-body);
-}
-
-.progress-item:last-child {
-  border-bottom: none;
-}
-
-.progress-item.completed {
-  color: var(--color-success-dark);
-}
-
-.progress-item.current {
-  color: var(--color-burgundy);
-  font-weight: 500;
-}
-
-.progress-item.pending {
-  color: var(--color-text-tertiary);
-}
-
-.progress-check {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: var(--color-success);
-  color: white;
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-.progress-dot {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--color-border);
-  flex-shrink: 0;
-}
-
-.progress-item.current .progress-dot {
-  background: var(--color-burgundy);
-  box-shadow: 0 0 0 4px rgba(114, 47, 55, 0.2);
-}
-
-.progress-phase {
-  font-family: var(--font-ui);
-  font-weight: 600;
-  min-width: 80px;
-}
-
-.progress-desc {
-  font-family: var(--font-body);
 }
 
 /* ─── Footer ─── */
@@ -261,14 +181,35 @@
   color: var(--color-burgundy);
 }
 
+/* ─── Layout Grid ─── */
+.layout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.layout-main,
+.layout-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
 /* ─── Responsive ─── */
+@media (max-width: 960px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .app-container {
     padding: var(--space-md);
   }
 
   .app-title {
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-2xl);
   }
 
   .score-frame {
@@ -276,7 +217,7 @@
   }
 
   .header-flourish {
-    max-width: 280px;
+    max-width: 260px;
   }
 
   .progress-item {

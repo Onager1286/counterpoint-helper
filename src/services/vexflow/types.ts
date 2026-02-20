@@ -71,7 +71,7 @@ export interface GrandStaffRenderOptions extends RenderOptions {
 }
 
 /**
- * Metadata returned from renderGrandStaff for click detection
+ * Metadata returned from renderGrandStaff for layout calculations
  */
 export interface RenderMetadata {
   /**
