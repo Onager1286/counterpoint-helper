@@ -4,7 +4,9 @@ import { useComposition } from '../../context/CompositionContext';
 import { TonePlaybackService } from '../../services/tonejs/TonePlaybackService';
 import styles from './PlaybackControls.module.css';
 
-const BPM = 80;
+const DEFAULT_BPM = 80;
+const MIN_BPM = 40;
+const MAX_BPM = 200;
 
 function durationToTicks(duration: NoteDuration): number {
   const map: Record<NoteDuration, number> = {
@@ -43,6 +45,7 @@ export function PlaybackControls() {
   const { cantusFirmus, counterpoint } = useComposition();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingSamples, setIsLoadingSamples] = useState(false);
+  const [bpm, setBpm] = useState(DEFAULT_BPM);
   const stopTimeoutRef = useRef<number | null>(null);
 
   const canPlay = Boolean(cantusFirmus && cantusFirmus.length > 0);
@@ -90,8 +93,8 @@ export function PlaybackControls() {
       setIsLoadingSamples(true);
       await TonePlaybackService.preloadSamples();
       setIsLoadingSamples(false);
-      await TonePlaybackService.play(cantusFirmus ?? [], counterpoint, { bpm: BPM });
-      const durationMs = estimatePlaybackMs(cantusFirmus, counterpoint, BPM);
+      await TonePlaybackService.play(cantusFirmus ?? [], counterpoint, { bpm });
+      const durationMs = estimatePlaybackMs(cantusFirmus, counterpoint, bpm);
       if (durationMs > 0) {
         stopTimeoutRef.current = window.setTimeout(() => {
           setIsPlaying(false);
@@ -115,7 +118,18 @@ export function PlaybackControls() {
       >
         {isLoadingSamples ? 'Loading…' : (isPlaying ? 'Stop' : 'Play')}
       </button>
-      <span className={styles.tempoTag}>{BPM} BPM</span>
+      <label className={styles.tempoSlider}>
+        <input
+          type="range"
+          className={styles.tempoRange}
+          min={MIN_BPM}
+          max={MAX_BPM}
+          step={1}
+          value={bpm}
+          onChange={(e) => setBpm(Number(e.target.value))}
+        />
+        <span className={styles.tempoTag}>{bpm} BPM</span>
+      </label>
     </div>
   );
 }
