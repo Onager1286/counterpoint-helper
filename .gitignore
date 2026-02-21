@@ -25,3 +25,4 @@ public/samples/piano/*.mp3
 *.njsproj
 *.sln
 *.sw?
+.worktrees/
