@@ -1,6 +1,22 @@
-import { StaveNote, Accidental } from 'vexflow';
+import { StaveNote, Accidental, Stem } from 'vexflow';
 import type { Note, Clef } from '../../core/types/music.types';
 import { pitchToVexFlow, durationToVexFlow } from '../../core/utils/vexflowFormatters';
+
+/**
+ * Returns the correct stem direction per standard notation convention:
+ * notes on or above the middle line (3rd line) receive a downward stem;
+ * notes below receive an upward stem.
+ *
+ * Middle-line MIDI thresholds:
+ *   Treble clef: B4 = MIDI 71
+ *   Bass clef:   D3 = MIDI 50
+ */
+function getStemDirection(midiNumber: number, clef: Clef): number {
+  const TREBLE_MIDDLE_LINE_MIDI = 71; // B4
+  const BASS_MIDDLE_LINE_MIDI   = 50; // D3
+  const threshold = clef === 'treble' ? TREBLE_MIDDLE_LINE_MIDI : BASS_MIDDLE_LINE_MIDI;
+  return midiNumber >= threshold ? Stem.DOWN : Stem.UP;
+}
 
 /**
  * Converts a single Note to a VexFlow StaveNote.
@@ -12,12 +28,14 @@ import { pitchToVexFlow, durationToVexFlow } from '../../core/utils/vexflowForma
 function noteToStaveNote(note: Note, clef: Clef): StaveNote {
   const vexPitch = pitchToVexFlow(note.pitch);
   const vexDuration = durationToVexFlow(note.duration);
+  const stemDirection = getStemDirection(note.midiNumber, clef);
 
   // Create the StaveNote with clef for correct vertical positioning
   const staveNote = new StaveNote({
     clef,
     keys: [vexPitch],
     duration: vexDuration,
+    stem_direction: stemDirection,
   });
 
   // Extract and apply accidentals if present
