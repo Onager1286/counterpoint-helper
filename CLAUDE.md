@@ -13,7 +13,7 @@ npm install          # Install dependencies
 npm run dev          # Dev server → http://localhost:5173
 npm run build        # tsc + vite build → dist/
 npm run preview      # Preview production build
-npm run lint         # ESLint (max-warnings 0 — zero warnings allowed)
+npm run lint         # ESLint (max-warnings 0) — NOTE: eslint may not be installed locally; use npm run build as the correctness gate
 ```
 
 No test runner is configured. `npm run build` is the primary correctness gate: it runs `tsc` in strict mode before bundling.
@@ -240,6 +240,8 @@ const metadata = VexFlowService.renderGrandStaff(
 
 **Responsive Staff Reflow:** The staff automatically adjusts `measuresPerSystem` based on container width using `ResizeObserver`. Width thresholds: 180px minimum per measure, max 4 measures per system. The component uses two refs: `wrapperRef` (always present for resize observation) and `staffRef` (for VexFlow rendering and click handling).
 
+**Cursor overlay:** A semi-transparent SVG `<rect>` is appended after VexFlow renders — green (`rgba(76,175,80,0.45)`) on empty slots, blue (`rgba(33,150,243,0.45)`) on occupied slots. Query `svg rect[fill]` to inspect it in preview evals.
+
 ---
 
 ## Music Math Quick Reference
@@ -261,13 +263,20 @@ const metadata = VexFlowService.renderGrandStaff(
 - Duration mapping: `NoteDuration` `'1'|'2'|'4'|'8'|'16'` → Tone.js `'1n'|'2n'|'4n'|'8n'|'16n'`.
 - Default BPM: 80.
 
-`PlaybackControls` component provides Play/Stop toggle and tempo display.
+`PlaybackControls` component provides Play/Stop toggle and interactive BPM slider (40–200 BPM).
 
 ---
 
-## Phase 8: Polish & Educational Content (next)
+## Preview Testing Gotchas
 
-- Species selector UI (state exists in context, no picker yet)
-- Staff note highlighting when violations reference specific notes
-- Richer educational tooltips / side panel
-- Onboarding / tutorial flow
+- `preview_snapshot` throws "t.slice is not a function" in this app — use `preview_screenshot` + `preview_eval` instead.
+- Keyboard events must target `window`: `window.dispatchEvent(new KeyboardEvent('keydown', { key: 'x', bubbles: true }))`.
+- When dispatching multiple key events programmatically, add `setTimeout(..., 200)` between each to allow React re-renders.
+
+---
+
+## Phase 8: Polish & Educational Content (in progress)
+
+**Completed:** Interactive BPM slider (PlaybackControls), arrow key cursor navigation for note entry (InteractiveStaffDisplay — Left/Right to move cursor freely, A–G replaces note in place, blue cursor on occupied slots).
+
+**Remaining:** Richer educational tooltips / side panel, onboarding / tutorial flow.
