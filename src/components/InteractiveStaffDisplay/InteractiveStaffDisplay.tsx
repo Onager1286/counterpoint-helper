@@ -170,12 +170,20 @@ export function InteractiveStaffDisplay() {
           const sysY    = metadata.topPadding + sysIdx * (metadata.systemHeight + metadata.systemSpacing);
           const cursorY = sysY + metadata.trebleStaveY + VEXFLOW_STAVE_TOP_MARGIN - 20;
 
+          // Blue cursor when over an existing note, green on empty slots
+          const slotOccupied = counterpoint.some(
+            n => n.measureIndex === cMeas && n.beatPosition === cBeat
+          );
+          const cursorColor = slotOccupied
+            ? 'rgba(33, 150, 243, 0.45)'
+            : 'rgba(76, 175, 80, 0.45)';
+
           const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
           rect.setAttribute('x',      String(cursorX));
           rect.setAttribute('y',      String(cursorY));
           rect.setAttribute('width',  '6');
           rect.setAttribute('height', '80');
-          rect.setAttribute('fill',   'rgba(76, 175, 80, 0.45)');
+          rect.setAttribute('fill',   cursorColor);
           rect.setAttribute('rx',     '3');
           svg.appendChild(rect);
         }
@@ -194,28 +202,38 @@ export function InteractiveStaffDisplay() {
       const total = cantusFirmus.length * npm;
       const upper = e.key.toUpperCase();
 
-      // ── A–G: place note at cursor ──
+      // ── ArrowLeft / ArrowRight: move cursor freely ──
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setCursorSlot(prev => Math.max(prev - 1, 0));
+        return;
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setCursorSlot(prev => Math.min(prev + 1, total));
+        return;
+      }
+
+      // ── A–G: place or replace note at cursor ──
       if ('ABCDEFG'.includes(upper) && upper.length === 1) {
         e.preventDefault();
         if (cursorSlot >= total) return;
 
         const { measureIndex, beatPosition } = beatSlotToPosition(cursorSlot, npm);
 
-        // Skip if a note already occupies this slot
-        const alreadyThere = counterpoint.some(
+        // Check if a note already occupies this slot
+        const existingIdx = counterpoint.findIndex(
           n => n.measureIndex === measureIndex && n.beatPosition === beatPosition
         );
-        if (alreadyThere) {
-          setCursorSlot(prev => Math.min(prev + 1, total));
-          return;
-        }
 
         // Determine pitch with key-signature accidentals
         const pitchRoot = applyKeySignature(upper, key);
 
-        // Smart octave: prefer note closest to previous CP note, then CF, then C4
+        // Smart octave: use existing note at cursor (if replacing), previous CP note, CF, or C4
         let referenceMidi = 60;
-        if (counterpoint.length > 0) {
+        if (existingIdx !== -1) {
+          referenceMidi = counterpoint[existingIdx].midiNumber;
+        } else if (counterpoint.length > 0) {
           // Find the note at cursorSlot - 1 by position, fall back to last in array
           const prevSlot = beatSlotToPosition(cursorSlot - 1, npm);
           const prev = counterpoint.find(
@@ -231,19 +249,28 @@ export function InteractiveStaffDisplay() {
         const pitch   = `${pitchRoot}${octave}`;
         const duration = durationForSpecies(species);
 
+        // Replace existing note: remove first, then add new
+        if (existingIdx !== -1) {
+          removeCounterpointNote(existingIdx);
+        }
+
         addCounterpointNote(createNote(pitch, duration, measureIndex, beatPosition, 1));
-        setCursorSlot(prev => Math.min(prev + 1, total));
+
+        // Only advance cursor when entering a new note (not replacing)
+        if (existingIdx === -1) {
+          setCursorSlot(prev => Math.min(prev + 1, total));
+        }
         return;
       }
 
-      // ── ArrowUp / ArrowDown: shift last-entered note by one octave ──
+      // ── ArrowUp / ArrowDown: shift note at cursor by one octave ──
       if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         e.preventDefault();
-        if (cursorSlot === 0) return;
+        if (cursorSlot >= total) return;
 
-        const prevSlot = beatSlotToPosition(cursorSlot - 1, npm);
+        const curPos = beatSlotToPosition(cursorSlot, npm);
         const idx = counterpoint.findIndex(
-          n => n.measureIndex === prevSlot.measureIndex && n.beatPosition === prevSlot.beatPosition
+          n => n.measureIndex === curPos.measureIndex && n.beatPosition === curPos.beatPosition
         );
         if (idx === -1) return;
 
@@ -297,10 +324,9 @@ export function InteractiveStaffDisplay() {
   return (
     <div ref={wrapperRef} className={styles.container}>
       <div className={styles.instructions}>
-        <strong>Instructions:</strong> Press <strong>A–G</strong> to enter notes step by step.
-        <strong> ↑ ↓</strong> adjust the last note&apos;s octave. <strong>Backspace</strong> removes it.
-        Keyboard only: press <strong>A–G</strong> to place notes in beat order.
-        <strong> ↑ ↓</strong> adjust the last note&apos;s octave. <strong>Backspace</strong> removes it.
+        <strong>Instructions:</strong> Press <strong>A–G</strong> to enter notes.
+        <strong> ← →</strong> move the cursor. <strong>↑ ↓</strong> adjust octave.
+        <strong> Backspace</strong> deletes.
         {species === Species.First && (
           <span> Each measure takes one whole note.</span>
         )}
