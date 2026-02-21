@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Piano samples (downloaded locally via `npm run download:samples`)
+public/samples/piano/*.mp3
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
