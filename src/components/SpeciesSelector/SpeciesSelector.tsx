@@ -18,7 +18,12 @@ const ALL_SPECIES = [
   Species.Fifth,
 ] as const;
 
-export function SpeciesSelector() {
+interface SpeciesSelectorProps {
+  isExpanded: boolean;
+  onExpand: () => void;
+}
+
+export function SpeciesSelector({ isExpanded, onExpand }: SpeciesSelectorProps) {
   const { species, setSpecies, clearCounterpoint } = useComposition();
 
   const handleSelect = (s: Species) => {
@@ -27,8 +32,22 @@ export function SpeciesSelector() {
     clearCounterpoint();
   };
 
+  if (!isExpanded) {
+    return (
+      <div key="summary" className={styles.summaryBar}>
+        <span className={styles.summaryCheck}>✓</span>
+        <span className={styles.summaryLabel}>
+          {ROMAN_NUMERALS[species]} · {SPECIES_CONFIGS[species].name}
+        </span>
+        <button type="button" className={styles.summaryEdit} onClick={onExpand}>
+          Edit
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className={styles.container}>
+    <div key="expanded" className={styles.container}>
       <h2 className={styles.title}>Select Your Species</h2>
       <p className={styles.subtitle}>
         Each species introduces new rhythmic and melodic techniques.

@@ -167,6 +167,50 @@
   margin: 0;
 }
 
+/* ─── Welcome Panel (shown before CF is generated) ─── */
+.welcome-panel {
+  position: relative;
+  background: var(--color-parchment-dark);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl) var(--space-lg);
+  box-shadow:
+    var(--shadow-elevated),
+    inset 0 0 30px rgba(90, 83, 71, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 280px;
+}
+
+.welcome-icon {
+  font-size: 4rem;
+  color: var(--color-brass);
+  opacity: 0.55;
+  margin-bottom: var(--space-lg);
+  line-height: 1;
+  display: block;
+}
+
+.welcome-title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-md);
+}
+
+.welcome-body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  max-width: 340px;
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
 /* ─── Footer ─── */
 .app-footer {
   text-align: center;
@@ -218,13 +262,5 @@
 
   .header-flourish {
     max-width: 260px;
-  }
-
-  .progress-item {
-    flex-wrap: wrap;
-  }
-
-  .progress-phase {
-    min-width: auto;
   }
 }

@@ -53,15 +53,15 @@ src/
 │       ├── musicMath.ts          # pitchToMidi(), midiToPitch(), semitoneDifference()
 │       ├── keySignatures.ts      # KEY_SIGNATURES map, getScaleDegrees(), parseKey()
 │       ├── noteParser.ts         # parsePitch(), createNote(), formatNote()
-│       └── vexflowFormatters.ts  # pitchToVexFlow(), durationToVexFlow()
+│       ├── vexflowFormatters.ts  # pitchToVexFlow(), durationToVexFlow()
+│       └── violationHighlightMapper.ts  # Maps violations + selection state → per-note VexFlow highlights
 ├── services/
 │   ├── tonejs/
 │   │   └── TonePlaybackService.ts  # Static class — init(), play(), stop(), dual-synth playback
 │   └── vexflow/
 │       ├── VexFlowService.ts     # Static class — render() and renderGrandStaff()
 │       ├── types.ts              # RenderOptions, GrandStaffRenderOptions, RenderMetadata
-│       ├── noteFormatter.ts      # Note[] → StaveNote[], measure/system grouping
-│       └── CoordinateMapper.ts   # SVG pixel coords → (measure, MIDI note) for click input
+│       └── noteFormatter.ts      # Note[] → StaveNote[], measure/system grouping
 ├── context/
 │   └── CompositionContext.tsx    # Global state provider + auto-analysis trigger
 ├── components/
@@ -86,6 +86,7 @@ src/
 │   ├── ViolationDisplay/
 │   │   ├── ViolationDisplay.tsx
 │   │   └── ViolationDisplay.module.css
+│   ├── RuleReference/            # Collapsible panel — rules grouped by category for current species
 │   └── StaffDisplay/             # Read-only single staff (legacy)
 └── constants/
     └── musicConstants.ts         # NOTE_NAMES, CONSONANT_INTERVALS, etc.
@@ -99,7 +100,7 @@ src/
 
 **3. Rule Engine** — Each rule is a standalone object (id, name, severity, species[], check). Rules are organised by musical category, not by species. `analyzeComposition()` filters by species and runs all matching checks. See the Rule Implementation section below for the pattern and ID conventions.
 
-**4. VexFlow as a Static Service** — `VexFlowService` is a static class; do not instantiate it. Call `VexFlowService.render(container, ...)` or `VexFlowService.renderGrandStaff(container, ...)` directly. It returns `RenderMetadata` used by `CoordinateMapper` to translate click positions back into musical data.
+**4. VexFlow as a Static Service** — `VexFlowService` is a static class; do not instantiate it. Call `VexFlowService.render(container, ...)` or `VexFlowService.renderGrandStaff(container, ...)` directly. It returns `RenderMetadata` with stave/system geometry (used for layout calculations).
 
 **5. Beat-Aware Helpers** — Species II–V place multiple notes per measure at different beat positions. The helpers in `beatHelpers.ts` and `scaleHelpers.ts` are the correct primitives for iterating and analysing those notes. Do not use the legacy whole-note helpers for anything beyond Species I.
 
@@ -133,7 +134,7 @@ All types live in `src/core/types/` and are shared across the stack.
 | File | Key exports |
 |---|---|
 | `music.types.ts` | `Note`, `NoteDuration` (`'1'\|'2'\|'4'\|'8'\|'16'`), `Interval`, `VoiceMotion`, `MotionType`, `Accidental`, `Clef` |
-| `analysis.types.ts` | `Rule`, `Violation`, `AnalysisResult`, `RuleContext`, `Severity` (`'error'\|'warning'`) |
+| `analysis.types.ts` | `Rule` (includes `category: RuleCategoryId`), `RuleCategoryId`, `Violation`, `AnalysisResult`, `RuleContext`, `Severity` (`'error'\|'warning'`) |
 | `species.types.ts` | `Species` enum (First=1…Fifth=5), `SpeciesConfig`, `SPECIES_CONFIGS` |
 | `key.types.ts` | `Key` (tonic, mode, signature), `Scale`, `Mode` (`'major'\|'minor'`) |
 
@@ -176,7 +177,7 @@ export const yourRule: Rule = {
 };
 ```
 
-Then import and add to `ALL_RULES` in `src/core/rules/registry.ts`.
+Also add a `category: RuleCategoryId` field to the rule object, then import and add to `ALL_RULES` in `src/core/rules/registry.ts`.
 
 ### ID prefix conventions
 
@@ -186,6 +187,8 @@ Then import and add to `ALL_RULES` in `src/core/rules/registry.ts`.
 | `species1-` | Species I only (legacy; new rules use `s1-`) |
 | `s2-` / `s3-` / `s4-` / `s5-` | Single species |
 | `s2s3-` / `s2s3s5-` | Shared subset |
+
+The registry also exports `getRulesGroupedByCategory(species)` and `RULE_CATEGORIES` (metadata: name + description per category) — used by `RuleReference` to display rules to the user.
 
 ### Rule categories (6 files, 53 rules total)
 
@@ -236,8 +239,6 @@ const metadata = VexFlowService.renderGrandStaff(
 // metadata: RenderMetadata — stave positions, system geometry
 ```
 
-`InteractiveStaffDisplay` uses `CoordinateMapper` to convert click `(x, y)` back into `(measureIndex, midiNote)` using the returned metadata. The mapper needs the stave Y offsets, system height/spacing, and clef to infer pitch from pixel position.
-
 **Responsive Staff Reflow:** The staff automatically adjusts `measuresPerSystem` based on container width using `ResizeObserver`. Width thresholds: 180px minimum per measure, max 4 measures per system. The component uses two refs: `wrapperRef` (always present for resize observation) and `staffRef` (for VexFlow rendering and click handling).
 
 **Cursor overlay:** A semi-transparent SVG `<rect>` is appended after VexFlow renders — green (`rgba(76,175,80,0.45)`) on empty slots, blue (`rgba(33,150,243,0.45)`) on occupied slots. Query `svg rect[fill]` to inspect it in preview evals.
@@ -277,6 +278,8 @@ const metadata = VexFlowService.renderGrandStaff(
 
 ## Phase 8: Polish & Educational Content (in progress)
 
-**Completed:** Interactive BPM slider (PlaybackControls), arrow key cursor navigation for note entry (InteractiveStaffDisplay — Left/Right to move cursor freely, A–G replaces note in place, blue cursor on occupied slots).
+**Completed:** Interactive BPM slider (PlaybackControls), arrow key cursor navigation for note entry (InteractiveStaffDisplay — Left/Right to move cursor freely, A–G replaces note in place, blue cursor on occupied slots), `RuleReference` collapsible panel showing all rules for the selected species grouped by category.
 
-**Remaining:** Richer educational tooltips / side panel, onboarding / tutorial flow.
+**In progress:** Progressive disclosure layout — `SpeciesSelector` and `CantusFirmusGenerator` now support `isExpanded`/`onExpand`/`onGenerated` props and render collapsed summary bars when inactive. `App.tsx` manages `openStep: 1 | 2 | null` state and shows a `WelcomePanel` before any CF is generated.
+
+**Remaining:** Onboarding / tutorial flow.

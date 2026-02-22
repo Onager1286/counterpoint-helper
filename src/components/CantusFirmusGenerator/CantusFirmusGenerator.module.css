@@ -14,6 +14,7 @@
   padding: var(--space-md);
   box-shadow: var(--shadow-card);
   position: relative;
+  animation: slideUp 0.25s var(--ease-elegant);
 }
 
 /* Decorative top accent */
@@ -156,6 +157,94 @@
   border-right-color: transparent;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
+}
+
+/* ─── Species-Changed Banner ─── */
+.speciesChangedBanner {
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-warning-light);
+  border: 1px solid var(--color-warning-border);
+  border-left: 3px solid var(--color-warning);
+  border-radius: var(--radius-sm);
+  color: var(--color-warning-dark);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  animation: slideUp 0.2s var(--ease-elegant);
+}
+
+/* ─── Collapsed Summary Bar ─── */
+.summaryBar {
+  background: linear-gradient(
+    to right,
+    var(--color-parchment-dark) 0%,
+    var(--color-cream) 100%
+  );
+  border: 1px solid var(--color-border-light);
+  border-left: 3px solid var(--color-success);
+  border-radius: var(--radius-lg);
+  padding: 10px var(--space-md);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  animation: slideUp 0.25s var(--ease-elegant);
+}
+
+.summaryCheck {
+  color: var(--color-success);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.summaryLabel {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  flex: 1;
+}
+
+.summaryEdit {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-burgundy);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.summaryEdit:hover {
+  color: var(--color-burgundy-dark);
+  background: rgba(114, 47, 55, 0.07);
+}
+
+.summaryEdit:focus-visible {
+  outline: 2px solid var(--color-burgundy);
+  outline-offset: 2px;
+}
+
+/* Warning state — species changed while CF exists */
+.summaryBarWarning {
+  border-left-color: var(--color-warning);
+  background: linear-gradient(
+    to right,
+    var(--color-warning-light) 0%,
+    var(--color-cream) 100%
+  );
+}
+
+.summaryWarn {
+  color: var(--color-warning);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
 /* Error Message */

@@ -13,5 +13,12 @@
       "runtimeArgs": ["run", "preview"],
       "port": 4173
     }
+  ,
+    {
+      "name": "ui-pass",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "cd '/Users/pvair/Desktop/Counterpoint Helper/.worktrees/ui-pass' && npm run dev -- --port 5174"],
+      "port": 5174
+    }
   ]
 }
