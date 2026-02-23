@@ -39,18 +39,12 @@ function AppContent() {
 
   return (
     <div className="app-container">
-      {/* Header with decorative flourish */}
       <header className="app-header">
-        <div className="header-flourish" aria-hidden="true" />
-        <div className="header-content">
-          <h1 className="app-title">Counterpoint Helper</h1>
-          <p className="app-subtitle">
-            Master the art of counterpoint composition
-            <span className="subtitle-divider">|</span>
-            <em>Following Fux&apos;s &ldquo;Gradus ad Parnassum&rdquo;</em>
-          </p>
-        </div>
-        <div className="header-flourish" aria-hidden="true" />
+        <h1 className="app-title">Counterpoint Helper</h1>
+        <span className="subtitle-divider" aria-hidden="true">·</span>
+        <p className="app-subtitle">
+          <em>Following Fux&apos;s &ldquo;Gradus ad Parnassum&rdquo;</em>
+        </p>
       </header>
 
       <main className="app-main">

@@ -35,90 +35,90 @@
   border-radius: 0 0 2px 2px;
 }
 
-.title {
+/* ─── Section Label ─── */
+
+.sectionLabel {
   font-family: var(--font-heading);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-xs);
   font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: var(--space-xs);
-}
-
-.subtitle {
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  margin-bottom: var(--space-md);
-  line-height: var(--line-height-relaxed);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-sm);
 }
 
-/* ─── Card Grid ─── */
+/* ─── Compact Button Group ─── */
 
-.grid {
+.buttonGroup {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--space-sm);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: var(--space-sm);
 }
 
-/* ─── Individual Card ─── */
-
-.card {
+.pill {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: var(--space-sm);
+  gap: 2px;
+  padding: 6px 4px;
   background: var(--color-ivory);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.2s var(--ease-elegant);
+  transition: all 0.15s var(--ease-elegant);
   text-align: center;
+  min-width: 0;
 }
 
-.card:hover:not(.active) {
+.pill:hover:not(.active) {
   border-color: var(--color-border-dark);
-  box-shadow: var(--shadow-subtle);
-  transform: translateY(-2px);
+  background: var(--color-parchment-dark);
 }
 
-.card:focus-visible {
+.pill:focus-visible {
   outline: 2px solid var(--color-burgundy);
   outline-offset: 2px;
 }
 
-/* Active state */
-.card.active {
+.pill.active {
   background: var(--color-parchment-dark);
   border: 2px solid var(--color-burgundy);
-  box-shadow: 0 0 0 3px rgba(114, 47, 55, 0.1);
+  box-shadow: 0 0 0 2px rgba(114, 47, 55, 0.1);
 }
-
-/* ─── Card Content ─── */
 
 .numeral {
   font-family: var(--font-display);
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-lg);
   font-weight: 500;
   color: var(--color-brass);
   line-height: 1;
 }
 
-.card.active .numeral {
+.pill.active .numeral {
   color: var(--color-burgundy);
 }
 
-.name {
+.abbr {
   font-family: var(--font-ui);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-xs);
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
 }
 
-.description {
+.hint {
   font-family: var(--font-body);
   font-size: var(--font-size-sm);
   color: var(--color-text-tertiary);
-  line-height: var(--line-height-relaxed);
+  line-height: var(--line-height-snug);
+  margin: 0;
+  min-height: 1em;
 }
 
 /* ─── Collapsed Summary Bar ─── */

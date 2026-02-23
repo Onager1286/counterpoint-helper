@@ -15,58 +15,35 @@
 
 /* ─── Header ─── */
 .app-header {
-  text-align: center;
-  padding: var(--space-lg) 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0 var(--space-md);
   margin-bottom: var(--space-md);
-}
-
-.header-content {
-  position: relative;
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .app-title {
   font-family: var(--font-display);
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-xl);
   font-weight: 500;
   color: var(--color-burgundy);
   letter-spacing: 0.02em;
-  margin-bottom: var(--space-sm);
+  margin: 0;
   text-shadow: 0 1px 2px rgba(114, 47, 55, 0.1);
 }
 
 .app-subtitle {
   font-family: var(--font-body);
-  font-size: var(--font-size-base);
-  color: var(--color-text-secondary);
-  font-weight: 400;
-}
-
-.app-subtitle em {
-  font-style: italic;
+  font-size: var(--font-size-sm);
   color: var(--color-text-tertiary);
+  font-weight: 400;
+  margin: 0;
 }
 
 .subtitle-divider {
-  margin: 0 var(--space-sm);
   color: var(--color-brass);
-}
-
-/* Header Flourish */
-.header-flourish {
-  height: 3px;
-  margin: var(--space-md) auto;
-  max-width: 340px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-border-light) 15%,
-    var(--color-brass) 35%,
-    var(--color-brass-light) 50%,
-    var(--color-brass) 65%,
-    var(--color-border-light) 85%,
-    transparent 100%
-  );
-  border-radius: 2px;
+  font-size: var(--font-size-sm);
 }
 
 /* ─── Main Content ─── */
@@ -240,6 +217,13 @@
   gap: var(--space-md);
 }
 
+.layout-side {
+  position: sticky;
+  top: var(--space-lg);
+  max-height: calc(100vh - 2 * var(--space-lg));
+  overflow-y: auto;
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 960px) {
   .layout-grid {
@@ -252,15 +236,7 @@
     padding: var(--space-md);
   }
 
-  .app-title {
-    font-size: var(--font-size-2xl);
-  }
-
   .score-frame {
     padding: var(--space-md);
-  }
-
-  .header-flourish {
-    max-width: 260px;
   }
 }

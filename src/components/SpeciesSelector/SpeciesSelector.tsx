@@ -10,6 +10,14 @@ const ROMAN_NUMERALS: Record<Species, string> = {
   [Species.Fifth]: 'V',
 };
 
+const ABBREV: Record<Species, string> = {
+  [Species.First]:  '1:1',
+  [Species.Second]: '2:1',
+  [Species.Third]:  '4:1',
+  [Species.Fourth]: 'Tied',
+  [Species.Fifth]:  'Florid',
+};
+
 const ALL_SPECIES = [
   Species.First,
   Species.Second,
@@ -48,31 +56,26 @@ export function SpeciesSelector({ isExpanded, onExpand }: SpeciesSelectorProps) 
 
   return (
     <div key="expanded" className={styles.container}>
-      <h2 className={styles.title}>Select Your Species</h2>
-      <p className={styles.subtitle}>
-        Each species introduces new rhythmic and melodic techniques.
-        Master them in order to build your counterpoint skills.
-      </p>
-
-      <div className={styles.grid}>
+      <h3 className={styles.sectionLabel}>Select Species</h3>
+      <div className={styles.buttonGroup} role="group" aria-label="Select counterpoint species">
         {ALL_SPECIES.map((s) => {
-          const config = SPECIES_CONFIGS[s];
           const isActive = s === species;
           return (
             <button
               key={s}
               type="button"
-              className={`${styles.card} ${isActive ? styles.active : ''}`}
+              className={`${styles.pill} ${isActive ? styles.active : ''}`}
               onClick={() => handleSelect(s)}
               aria-pressed={isActive}
+              title={SPECIES_CONFIGS[s].name}
             >
               <span className={styles.numeral}>{ROMAN_NUMERALS[s]}</span>
-              <span className={styles.name}>{config.name}</span>
-              <span className={styles.description}>{config.description}</span>
+              <span className={styles.abbr}>{ABBREV[s]}</span>
             </button>
           );
         })}
       </div>
+      <p className={styles.hint}>{SPECIES_CONFIGS[species].description}</p>
     </div>
   );
 }
